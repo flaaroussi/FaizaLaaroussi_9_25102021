@@ -62,4 +62,32 @@ export default class {
       .catch(error => error)
     }
   }
+
 }
+//
+export const doSortBillsByDate = (bills) => {
+   function tri(bill1, bill2) {
+    let d1 = new Date(bill1.date);
+    let  d2 = new Date(bill2.date);
+
+    if(!d1.getDate()){
+      d1 = new Date ('1700-01-01');
+    }
+    if(!d2.getDate()){
+      d2 = new Date ('1700-01-01');
+    }
+
+    console.log(d1 + '---'+d2)
+    
+    if(d1 <=  d2){
+      return 1;
+    }else{
+      return -1;
+    }
+  }
+
+
+  return bills.sort(tri);
+
+
+  }

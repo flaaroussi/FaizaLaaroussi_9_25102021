@@ -1,6 +1,7 @@
 import VerticalLayout from './VerticalLayout.js'
 import ErrorPage from "./ErrorPage.js"
 import LoadingPage from "./LoadingPage.js"
+import {doSortBillsByDate} from "../containers/Bills.js"
 
 import Actions from './Actions.js'
 
@@ -20,7 +21,18 @@ const row = (bill) => {
   }
 
 const rows = (data) => {
-  return (data && data.length) ? data.map(bill => row(bill)).join("") : ""
+  //je dois appliquer le tri avant l'affichage des lignes
+  //code avant integration du tri:
+  //return (data && data.length) ? data.map(bill => row(bill)).join("") : ""
+  if(data && data.length){
+    console.log(data);
+    //appeler la fonction pour trier les notes de frais
+    //data = doSortBillsByDate(data);
+    //console.log(data);
+    return doSortBillsByDate(data).map(bill => row(bill)).join("");
+
+  }
+  return ""; 
 }
 
 export default ({ data: bills, loading, error }) => {
