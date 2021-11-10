@@ -77,8 +77,6 @@ export const doSortBillsByDate = (bills) => {
       d2 = new Date ('1700-01-01');
     }
 
-    console.log(d1 + '---'+d2)
-    
     if(d1 <=  d2){
       return 1;
     }else{

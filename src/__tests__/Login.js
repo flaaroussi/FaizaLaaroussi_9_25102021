@@ -161,6 +161,7 @@ describe("Given that I am a user on login page", () => {
         password: "azerty",
         status: "connected"
       }
+      
 
       const inputEmailUser = screen.getByTestId("admin-email-input")
       fireEvent.change(inputEmailUser, { target: { value: inputData.email } })
