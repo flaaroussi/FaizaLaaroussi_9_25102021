@@ -18,8 +18,13 @@ export default class NewBill {
   handleChangeFile = e => {
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
     const filePath = e.target.value.split(/\\/g)
-    const fileName = filePath[filePath.length-1]   
-    this.firestore
+    const fileName = filePath[filePath.length-1]  
+    // controle sur l'extension des fichers autorisés
+    const fileNameDiv = fileName.split(".")
+    const listeExtValid = ["jpeg", "png" ,"jpg"];
+
+    if (listeExtValid.includes(fileNameDiv[1].toLowerCase())) {
+      this.firestore
       .storage
       .ref(`justificatifs/${fileName}`)
       .put(file)
@@ -28,6 +33,11 @@ export default class NewBill {
         this.fileUrl = url
         this.fileName = fileName
       })
+    }else{
+      alert('Extension du fichier non autorisée');
+      e.target.querySelector(`input[data-testid="file"]`).files = null;      
+      return false;
+    }
   }
   handleSubmit = e => {
     e.preventDefault()
