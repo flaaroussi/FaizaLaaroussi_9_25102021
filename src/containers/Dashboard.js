@@ -148,8 +148,9 @@ export default class {
       this.counter ++
     }
 
+    
     bills.forEach(bill => {
-      // il faut détacher l'event click avant de retacher
+      // il faut détacher l'event click avant de le rattacher
       $(`#open-bill${bill.id}`).unbind('click').click((e) => this.handleEditTicket(e, bill, bills))
     })
 

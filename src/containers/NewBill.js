@@ -15,15 +15,16 @@ export default class NewBill {
     this.fileName = null
     new Logout({ document, localStorage, onNavigate })
   }
-  handleChangeFile = e => {
+  handleChangeFile = (e) => {
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
     const filePath = e.target.value.split(/\\/g)
     const fileName = filePath[filePath.length-1]  
     // controle sur l'extension des fichers autorisés
-    const fileNameDiv = fileName.split(".")
+    const fileNameDiv = fileName.split(".");
+    let ext = fileNameDiv[1].toLowerCase();
     const listeExtValid = ["jpeg", "png" ,"jpg"];
-
-    if (listeExtValid.includes(fileNameDiv[1].toLowerCase())) {
+    // si l'extension est inclus dans listeExtValid
+    if (listeExtValid.includes(ext)) {
       this.firestore
       .storage
       .ref(`justificatifs/${fileName}`)
@@ -35,7 +36,7 @@ export default class NewBill {
       })
     }else{
       alert('Extension du fichier non autorisée');
-      e.target.querySelector(`input[data-testid="file"]`).files = null;      
+      e.target.value = null;      
       return false;
     }
   }

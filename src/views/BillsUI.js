@@ -1,35 +1,31 @@
 import VerticalLayout from './VerticalLayout.js'
 import ErrorPage from "./ErrorPage.js"
 import LoadingPage from "./LoadingPage.js"
-import {doSortBillsByDate} from "../containers/Bills.js"
-
 import Actions from './Actions.js'
+import { antiChrono, formatDate } from "../app/format.js"
 
 const row = (bill) => {
   return (`
     <tr>
       <td>${bill.type}</td>
       <td>${bill.name}</td>
-      <td>${bill.date}</td>
+      <td>${bill.id ? bill.date : formatDate(bill.date)}</td>
       <td>${bill.amount} €</td>
       <td>${bill.status}</td>
       <td>
-        ${Actions(bill.fileUrl)}
+        ${Actions(bill.id, bill.fileUrl)}
       </td>
     </tr>
     `)
   }
 
+  
+
 const rows = (data) => {
-  //je dois appliquer le tri avant l'affichage des lignes
-  //code avant integration du tri:
-  //return (data && data.length) ? data.map(bill => row(bill)).join("") : ""
-  if(data && data.length){
-    console.log(data);
-    //appeler la fonction pour trier les notes de frais
-    //data = doSortBillsByDate(data);
-    //console.log(data);
-    return doSortBillsByDate(data).map(bill => row(bill)).join("");
+  //je dois integrer la fct de test pour appliquer le tri avant l'affichage des lignes
+  if(data && data.length){    
+    const datesSorted = data.sort(antiChrono);
+    return datesSorted.map(bill => row(bill)).join("");
 
   }
   return ""; 
@@ -38,7 +34,7 @@ const rows = (data) => {
 export default ({ data: bills, loading, error }) => {
   
   const modal = () => (`
-    <div class="modal fade" id="modaleFile" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="modaleFile" data-testid="modaleFile" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -66,7 +62,7 @@ export default ({ data: bills, loading, error }) => {
       <div class='content'>
         <div class='content-header'>
           <div class='content-title'> Mes notes de frais </div>
-          <button type="button" data-testid='btn-new-bill' class="btn btn-primary">Nouvelle note de frais</button>
+          <button type="button" id="btn-new-bill" data-testid="btn-new-bill" class="btn btn-primary">Nouvelle note de frais</button>
         </div>
         <div id="data-table">
         <table id="example" class="table table-striped" style="width:100%">

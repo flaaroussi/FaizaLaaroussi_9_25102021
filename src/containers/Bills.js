@@ -9,7 +9,7 @@ export default class {
     this.firestore = firestore
     const buttonNewBill = document.querySelector(`button[data-testid="btn-new-bill"]`)
     if (buttonNewBill) buttonNewBill.addEventListener('click', this.handleClickNewBill)
-    const iconEye = document.querySelectorAll(`div[data-testid="icon-eye"]`)
+    const iconEye = document.querySelectorAll(`div[data-bill-url]`)
     if (iconEye) iconEye.forEach(icon => {
       icon.addEventListener('click', (e) => this.handleClickIconEye(icon))
     })
@@ -25,7 +25,10 @@ export default class {
     //ajuster l'affichage de l'image dans la modal
     const imgWidth = Math.floor($('#modaleFile').width() * 0.4)
     $('#modaleFile').find(".modal-body").html(`<div style='text-align: center;'><img width=${imgWidth} src=${billUrl} /></div>`)
-    $('#modaleFile').modal('show')
+    //si la fonction modal est bien existe
+    if(typeof $('#modaleFile').modal === 'function'){
+      $('#modaleFile').modal('show')
+    }
   }
 
   // not need to cover this function by tests
@@ -42,7 +45,7 @@ export default class {
             try {
               return {
                 ...doc.data(),
-                date: formatDate(doc.data().date),
+                date: doc.data().date,
                 status: formatStatus(doc.data().status)
               }
             } catch(e) {
@@ -65,28 +68,4 @@ export default class {
   }
 
 }
-//
-export const doSortBillsByDate = (bills) => {
-   function tri(bill1, bill2) {
-    let d1 = new Date(bill1.date);
-    let  d2 = new Date(bill2.date);
 
-    if(!d1.getDate()){
-      d1 = new Date ('1700-01-01');
-    }
-    if(!d2.getDate()){
-      d2 = new Date ('1700-01-01');
-    }
-
-    if(d1 <=  d2){
-      return 1;
-    }else{
-      return -1;
-    }
-  }
-
-
-  return bills.sort(tri);
-
-
-  }

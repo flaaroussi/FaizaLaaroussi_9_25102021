@@ -61,6 +61,7 @@
   -ms-flex-pack: justify;
   justify-content: space-around;
   align-items: center;
+  cursor: pointer;
 }
 
 .table td, .table th {
