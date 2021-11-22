@@ -27,3 +27,20 @@ export const formatStatus = (status) => {
 export const antiChrono = (bill1, bill2) => {
   return bill1.date < bill2.date ? 1 : -1;  
 };
+
+
+
+export const getDocsData = (docs) =>{
+  const userEmail = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).email : ""
+  return docs
+  .map(doc => {
+    try {
+      return {...doc.data(), date: doc.data().date, status: formatStatus(doc.data().status)}
+    } catch(e) {
+      // if for some reason, corrupted data was introduced, we manage here failing formatDate function
+      // log the error and return unformatted date in that case
+      return {...doc.data(), date: doc.data().date, status: formatStatus(doc.data().status)}
+    }
+  }).filter(bill => bill.email === userEmail)
+  
+}

@@ -25,6 +25,10 @@ window.localStorage.setItem(
   })
 );
 
+//je suis sur la page NewBill quand j'envoie un correct formulaire
+//est ce que je suis rediriger vers la page Bills 
+//test 1 = est ce que la fct handleSubmit est appelée
+//test 2: est que le titre Mes notes de frais est visible
 describe('Given i am logged as an employee', () => {
   describe('When I am on NewBill page and I submit a correct form', () => {
     test('Then I should be redirected to Bills page', () => {    
@@ -101,6 +105,7 @@ describe('Given i am logged as an employee', () => {
       });
 
       const handleChangeFile = jest.fn(newBillContainer.handleChangeFile);
+      const handleFirestoreStorage = jest.fn(newBillContainer.handleFirestoreStorage);
 
       const fileInput = screen.getByTestId('file');
       fileInput.addEventListener('change', handleChangeFile);
@@ -111,6 +116,8 @@ describe('Given i am logged as an employee', () => {
       });
 
       expect(handleChangeFile).toHaveBeenCalled();
+      const rs = handleFirestoreStorage(null, null);
+      expect(rs).toBe(false);
 
       expect(fileInput.files[0].name).toBe('image.png');
 

@@ -31,26 +31,26 @@ export default class NewBill {
     if (validExt.includes(fileExt)) {
       errorMsg.classList.remove('show');
       errorMsg.textContent = '';
-
-      /* istanbul data ignore */
-
-      if (this.firestore) {
-
-        this.firestore.storage
-          .ref(`justificatifs/${fileName}`)
-          .put(file)
-          .then((snapshot) => snapshot.ref.getDownloadURL())
-          .then((url) => {
-            this.fileUrl = url;
-            this.fileName = fileName;
-          });
-
-      }
+     this.handleFirestoreStorage(fileName, file);     
     } else {
       e.target.value = '';
       errorMsg.textContent = 'les extensions autorisées sont : png, jpeg, jpg';
       errorMsg.classList.add('show');
     }
+  };
+
+  handleFirestoreStorage = (fileName, file) => {
+    if (this.firestore) {
+      this.firestore.storage
+        .ref(`justificatifs/${fileName}`)
+        .put(file)
+        .then((snapshot) => snapshot.ref.getDownloadURL())
+        .then((url) => {
+          this.fileUrl = url;
+          this.fileName = fileName;
+        });
+    }
+    return false;
   };
 
   handleSubmit = (e) => {

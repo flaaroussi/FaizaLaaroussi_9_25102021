@@ -22,12 +22,14 @@ window.localStorage.setItem('user', JSON.stringify({
   type: 'Employee'
 }))
 
+//Tester BillsUI (views)
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
     test("Then bill icon in vertical layout should be highlighted", () => {
+      //Construire l'interface utilisateur
       const html = BillsUI({ data: []})
       document.body.innerHTML = html;
-      //to-do write expect expression//
+      //Screen doit etre vide
       const icon = screen.queryByTestId("icon-eye")
       expect(icon).toBeNull();
     })
@@ -42,9 +44,10 @@ describe("Given I am connected as an employee", () => {
 
   });
 
-  // LOADING PAGE for views/BillsUI.js
+
+  // Loading Page for views/BillsUI.js
   describe("When I am on Bills page but it's loading", () => {
-    test('Then I should land on a loading page', () => {
+    test('Then I should be on a loading page', () => {
       // build user interface
       const html = BillsUI({
         data: [],
@@ -57,9 +60,9 @@ describe("Given I am connected as an employee", () => {
     });
   });
 
-  // ERROR PAGE for views/BillsUI.js
+  // Error Page for views/BillsUI.js
   describe('When I am on Bills page but back-end send an error message', () => {
-    test('Then I should land on an error page', () => {
+    test('Then I should have an error page', () => {
       // build user interface
       const html = BillsUI({
         data: [],
@@ -93,31 +96,30 @@ describe("Given I am connected as an employee", () => {
             localStorage: window.localStorage 
           }            
         )      
-      
         //Mock handleClickNewBill (pointer)
         const hdlClickNewBill = jest.fn(billsInst.handleClickNewBill());
-      
         //Attach event to btnBill
         btnBill.addEventListener('click', hdlClickNewBill)
         //lanch click
         fireEvent.click(btnBill)
-        
+        //La note de frais doit être envoyée
         expect(screen.getAllByText('Envoyer une note de frais')).toBeTruthy();
+        //Le formulaire Nouvelle notre des frais doit être affiché
         expect(screen.getByTestId('form-new-bill')).not.toBe(null);    
       })
     })
 
-    // Test click eye to open justifrd
+    // Test click eye to open justificatif
     describe('When I am on Bills Page and I click on an eye icon in bill row', () => {
 
       test("Then, a modal should be open", () => {       
 
       //afficher les bills
       document.body.innerHTML = BillsUI({ data: bills});
-        //Get button New bill
+      //Get button New bill
       const iconEye = screen.getByTestId('icon-eye-47qAXb6fIm2zOKkLzMro')
       expect(iconEye).toBeTruthy(); 
-      //Aprés je dois simuler un click ,pour ca 
+        //Aprés je dois simuler un click ,pour ca je dois
         //instancier la classe Bills
         const billsInst = new Bills(
         { 
@@ -136,6 +138,7 @@ describe("Given I am connected as an employee", () => {
         iconEye.addEventListener('click', hdlClickIconEye)
         //lanch click
         fireEvent.click(iconEye)      
+        //Le modal dont le justificatif est affiché doit être visible
         expect(screen.getByTestId('modaleFile')).not.toBe(null);  
         
       })
@@ -148,7 +151,7 @@ describe("Given I am connected as an employee", () => {
 // test d'intégration de recupération des Bills avec GET 
 describe("Given I am a user connected as Employee", () => {
   describe("When I navigate to Bills UI", () => {
-    test("fetches bills from mock API GET", async () => {
+    test("then fetches bills from mock API GET", async () => {
       const getSpy = jest.spyOn(firebase, "get");
 
       // Get bills and the new bill
@@ -188,7 +191,7 @@ describe("Given I am a user connected as Employee", () => {
       document.body.innerHTML = html;
 
       const message = await screen.getByText(/Erreur 500/);
-      // wait for the error message 400
+      // wait for the error message 500
       expect(message).toBeTruthy();
     });
   });
