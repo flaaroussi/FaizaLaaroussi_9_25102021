@@ -65,6 +65,9 @@ export default {
     })
   },
 
+
+  
+
   post : async(request) =>{
     const bills = await firebase.get();
     return Promise.resolve({
@@ -72,7 +75,17 @@ export default {
         ...bills.data,
         {
           id : request.id,
-          status : request.status
+          status : request.status,
+          pct: request.pct,
+          email : request.email,
+          type: request.type,
+          name: request.name,
+          amount: request.amount,
+          date: request.date,
+          vat: request.vat,
+          commentary: request.commentary,
+          fileUrl: request.fileUrl,
+          fileName: request.fileName,
         }
       ]
      

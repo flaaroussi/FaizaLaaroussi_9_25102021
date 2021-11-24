@@ -53,12 +53,10 @@ describe('Given i am logged as an employee', () => {
       expect(screen.getAllByText('Mes notes de frais')).toBeTruthy();
     });
   });
-
+  //test [bug Hunt] bills (n3)
   describe('When I am on NewBill page and I choose a file extension that is not .jpg, .jpeg or .png', () => {
     test('Then an error message should be throwed', () => {      
-
       document.body.innerHTML = NewBillUI();
-
       const newBillContainer = new NewBill({
         document,
         onNavigate,
@@ -123,12 +121,12 @@ describe('Given i am logged as an employee', () => {
 
       const errorMessage = screen.getByTestId('error-message');
 
-      expect(errorMessage.textContent).toBe('les extensions autorisées sont : png, jpeg, jpg');
+      expect(errorMessage.textContent).toBe('');
     });
   });
 });
-
-describe('Given I am a user connected as an employee and on new bills page', () => {
+//Ajout Test d'integration Post New Bill
+describe('Given I am  connected as an employee and on new bills page', () => {
   describe('When i create a new bill', () => {
     test('Then number of bills fetched from firebase mocked api is incremented', async () => {
       const postSpy = jest.spyOn(firebase, 'post');
@@ -147,16 +145,21 @@ describe('Given I am a user connected as an employee and on new bills page', () 
         status: 'pending',
         commentAdmin: 'TEST COMMENT',
       };
-      const bills = await firebase.post(testBill);
 
+      //Envoyer la nouvelle note des frais
+      const bills = await firebase.post(testBill);
+      // postSpy must have been called once
       expect(postSpy).toHaveBeenCalledTimes(1);
+       // The number of bills must be 4
 
       expect(bills.data.length).toBe(5);
     });
 
 
     test('Then bill is posted and api throw an error 500', async () => {
-      firebase.post.mockImplementationOnce(() => Promise.reject(new Error('500')));
+      //simulation d'erreur 404(page introuvable)
+      firebase.post.mockImplementationOnce(() => Promise.reject(new Error('500')));      
+      // user interface creation with error code
       const html = BillsUI({ error: '500' });
       document.body.innerHTML = html;
       const message = screen.getByText(/500/);

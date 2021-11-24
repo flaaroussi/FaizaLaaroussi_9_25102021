@@ -22,7 +22,7 @@ window.localStorage.setItem('user', JSON.stringify({
   type: 'Employee'
 }))
 
-//Tester BillsUI (views)
+//Tester Bills(containers)
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
     test("Then bill icon in vertical layout should be highlighted", () => {
@@ -30,8 +30,8 @@ describe("Given I am connected as an employee", () => {
       const html = BillsUI({ data: []})
       document.body.innerHTML = html;
       //Screen doit etre vide
-      const icon = screen.queryByTestId("icon-eye")
-      expect(icon).toBeNull();
+      const icon = screen.getByTestId("icon-window")      
+      expect(icon).toBeTruthy();
     })
 
     test("Then bills should be ordered from earliest to latest", () => {
@@ -45,7 +45,7 @@ describe("Given I am connected as an employee", () => {
   });
 
 
-  // Loading Page for views/BillsUI.js
+  // Tester Loading Page for views/BillsUI.js
   describe("When I am on Bills page but it's loading", () => {
     test('Then I should be on a loading page', () => {
       // build user interface
@@ -80,13 +80,11 @@ describe("Given I am connected as an employee", () => {
     //test cliquer sur le botton Nouvelle note de frais
     describe('When I am on Bills Page and I click on the New bill button ', () => {
       test("Then, it should render New bill page ", () => {       
-
-        //vide la page
+        //vider la page
         const html = BillsUI({ data: [] })
         document.body.innerHTML = html;
         //Get button New bill
         const btnBill = screen.getByTestId('btn-new-bill')
-
         //instancier la classe Bills
         const billsInst = new Bills(
           { 
@@ -104,7 +102,7 @@ describe("Given I am connected as an employee", () => {
         fireEvent.click(btnBill)
         //La note de frais doit être envoyée
         expect(screen.getAllByText('Envoyer une note de frais')).toBeTruthy();
-        //Le formulaire Nouvelle notre des frais doit être affiché
+        //Le formulaire Nouvelle note des frais doit être affiché
         expect(screen.getByTestId('form-new-bill')).not.toBe(null);    
       })
     })
@@ -138,7 +136,7 @@ describe("Given I am connected as an employee", () => {
         iconEye.addEventListener('click', hdlClickIconEye)
         //lanch click
         fireEvent.click(iconEye)      
-        //Le modal dont le justificatif est affiché doit être visible
+        //La modal dont le justificatif est affiché doit être visible
         expect(screen.getByTestId('modaleFile')).not.toBe(null);  
         
       })
@@ -151,7 +149,7 @@ describe("Given I am connected as an employee", () => {
 // test d'intégration de recupération des Bills avec GET 
 describe("Given I am a user connected as Employee", () => {
   describe("When I navigate to Bills UI", () => {
-    test("then fetches bills from mock API GET", async () => {
+    test("then  API GET fetches (récupere) 4 bills", async () => {
       const getSpy = jest.spyOn(firebase, "get");
 
       // Get bills and the new bill
@@ -163,7 +161,8 @@ describe("Given I am a user connected as Employee", () => {
       expect(bills.data.length).toBe(4);
     });
 
-    test("fetches bills from an API and fails with 404 message error", async () => {
+    test("then should API return 404 message error when it doesn't fetches bills", async () => {
+      //simulation d'erreur 404(page introuvable)
       firebase.get.mockImplementationOnce(() =>
         Promise.reject(new Error("Erreur 404"))
       );

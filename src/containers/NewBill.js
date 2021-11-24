@@ -21,22 +21,24 @@ export default class NewBill {
   }
 
   handleChangeFile = (e) => {
-    const file = this.document.querySelector(`input[data-testid="file"]`).files[0];
-    const filePath = e.target.value.split(/\\/g);
-    const fileName = filePath[filePath.length - 1];
-    const fileExt = fileName.split('.').pop().toLowerCase();
-    const validExt = ['png', 'jpg', 'jpeg'];
+    const file = this.document.querySelector(`input[data-testid='file']`).files[0];
+    // Liste des extensions valide
+    const extensionCheck = /(png|jpg|jpeg)/g;
+    const extension = file.name.split('.').pop().toLowerCase();
     const errorMsg = document.querySelector('.error-message');
-
-    if (validExt.includes(fileExt)) {
-      errorMsg.classList.remove('show');
-      errorMsg.textContent = '';
-     this.handleFirestoreStorage(fileName, file);     
+    /**
+     * Si extension est valide
+     */
+    if (extension.match(extensionCheck)) {
+      const filePath = e.target.value.split(/\\/g);
+      const fileName = filePath[filePath.length - 1];
+      errorMsg.textContent = '';      
+      this.handleFirestoreStorage(fileName, file);
     } else {
-      e.target.value = '';
+      // sinon
+      this.document.querySelector(`input[data-testid='file']`).value = null;
       errorMsg.textContent = 'les extensions autorisées sont : png, jpeg, jpg';
-      errorMsg.classList.add('show');
-    }
+    };
   };
 
   handleFirestoreStorage = (fileName, file) => {
@@ -74,7 +76,6 @@ export default class NewBill {
   };
 
   // not need to cover this function by tests
-  /* istanbul ignore next */
   createBill = (bill) => {
     if (this.firestore) {
       this.firestore
