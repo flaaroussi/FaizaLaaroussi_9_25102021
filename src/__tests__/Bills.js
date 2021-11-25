@@ -2,38 +2,60 @@ import { screen, fireEvent } from "@testing-library/dom"
 import BillsUI from "../views/BillsUI.js"
 import Bills from "../containers/Bills.js"
 import { bills } from "../fixtures/bills.js"
-import { ROUTES } from "../constants/routes"
+import { ROUTES ,ROUTES_PATH} from "../constants/routes"
 import { localStorageMock } from "../__mocks__/localStorage.js"
 import { antiChrono } from "../app/format.js"
 import firebase from '../__mocks__/firebase.js';
-/**
- * 
- * Données et variables necessaire pour les testes 
- */
+import Firestore from '../app/Firestore.js';
+import Router from "../app/Router";
+
+
+// LocalStorage - Employee
+Object.defineProperty(window, "localStorage", {
+  value: localStorageMock,
+});
+window.localStorage.setItem(
+  "user",
+  JSON.stringify({
+    type: "Employee",
+  })
+);
+
+// Init onNavigate
 const onNavigate = (pathname) => {
-  document.body.innerHTML = ROUTES({ pathname })
-}
+  document.body.innerHTML = ROUTES({
+    pathname
+  });
+};
 
-Object.defineProperty(window, 'localStorage', { 
-  value: localStorageMock 
-})
-
-window.localStorage.setItem('user', JSON.stringify({
-  type: 'Employee'
-}))
-
-//Tester Bills(containers)
+//Tester Bills(containers) et tester fonction antiChrono
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
-    test("Then bill icon in vertical layout should be highlighted", () => {
-      //Construire l'interface utilisateur
-      const html = BillsUI({ data: []})
-      document.body.innerHTML = html;
-      //Screen doit etre vide
-      const icon = screen.getByTestId("icon-window")      
-      expect(icon).toBeTruthy();
-    })
+    test('Then bill icon in vertical layout should be highlighted', () => {
+      // Mock - simulation de la récupération des billes à partir la base firebase
 
+      jest.mock("../app/Firestore");
+      Firestore.bills = () => ({ bills,  get: jest.fn().mockResolvedValue() });
+
+      // Pointer sur Bills: '#employee/bills'
+      const pathname = ROUTES_PATH["Bills"];
+      // build div DOM
+      Object.defineProperty(window, "location", {
+        value: {
+          hash: pathname
+        }
+      });
+      
+      document.body.innerHTML = `<div id="root"></div>`;
+      // Router init to get actives CSS classes
+      Router();
+      expect(
+        // "icon-window" must contain the class "active-icon"
+        screen.getByTestId("icon-window").classList.contains("active-icon")
+      ).toBe(true);
+
+    });
+   
     test("Then bills should be ordered from earliest to latest", () => {
       const html = BillsUI({ data: bills })
       document.body.innerHTML = html
@@ -174,7 +196,7 @@ describe("Given I am a user connected as Employee", () => {
       document.body.innerHTML = html;
 
       const message = await screen.getByText(/Erreur 404/);
-      // wait for the error message 400
+      // wait for the error message 404
       expect(message).toBeTruthy();
     });
 
