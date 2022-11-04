@@ -1,12 +1,13 @@
 
-PROBLEMATIQUE
+
+## PROBLEMATIQUE
 
 L'application web comporte des erreurs sur le parcours employé qui doivent être analysées et déboguées.
 
-BESOIN
+## BESOIN
 Afin d'avoir un parcours employé fiable il faut réaliser des tests unitaires et d'integration et débugger.
 
-Livrables
+## Livrables
  Correction des erreurs détectées sur les parcours Employé et Administrateur
  Tests unitaires
  Tests d'intégration 
